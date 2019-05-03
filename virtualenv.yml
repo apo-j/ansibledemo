@@ -1,0 +1,25 @@
+- name: Create virtual env
+  hosts: local
+
+  tasks:
+    - name: Install apt packages
+      become: yes
+      apt:
+        name:
+          - git
+          - python-pip
+          - python-boto
+          - python-virtualenv
+        state: present
+        update_cache: yes
+
+    - name: Install requirements
+      pip:
+        name: gunicorn
+        virtualenv: "test2"
+        virtualenv_python: python3.4
+
+    - name: execute python script in env
+      script: scripts/virtualenvexample.py
+      environment:
+        PATH: "test2/bin" #add the virtualenv bin to the path and this will be used to launch the script
